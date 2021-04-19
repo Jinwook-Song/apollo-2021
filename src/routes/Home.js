@@ -3,8 +3,8 @@ import styled from "styled-components";
 import Movie from "../components/Movie";
 
 const GET_MOVIES = gql`
-  {
-    movies {
+  query highRating($rating: Float!) {
+    movies(rating: $rating) {
       id
       medium_cover_image
     }
@@ -57,7 +57,9 @@ const Movies = styled.div`
 
 // eslint-disable-next-line
 export default () => {
-  const { loading, data } = useQuery(GET_MOVIES);
+  const { loading, data } = useQuery(GET_MOVIES, {
+    variables: { rating: 9.0 },
+  });
   return (
     <Container>
       <Header>
