@@ -3,10 +3,11 @@ import styled from "styled-components";
 import Movie from "../components/Movie";
 
 const GET_MOVIES = gql`
-  query highRating($rating: Float!) {
-    movies(rating: $rating) {
+  query highRating($rating: Float!, $limit: Int!) {
+    movies(rating: $rating, limit: $limit) {
       id
       medium_cover_image
+      isLiked @client
     }
   }
 `;
@@ -58,7 +59,7 @@ const Movies = styled.div`
 // eslint-disable-next-line
 export default () => {
   const { loading, data } = useQuery(GET_MOVIES, {
-    variables: { rating: 9.0 },
+    variables: { rating: 8.0, limit: 50 },
   });
   return (
     <Container>
@@ -69,7 +70,12 @@ export default () => {
       {loading && <Loading>Loading...</Loading>}
       <Movies>
         {data?.movies?.map((movie) => (
-          <Movie key={movie.id} id={movie.id} bg={movie.medium_cover_image} />
+          <Movie
+            key={movie.id}
+            id={movie.id}
+            isLiked={movie.isLiked}
+            bg={movie.medium_cover_image}
+          />
         ))}
       </Movies>
     </Container>
